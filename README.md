@@ -1,5 +1,10 @@
 # who_rendered
 
+<p align="center">
+  <img src="doc/who-rendered.png" width="360"
+       alt="Retro poster in 1950s advertising style: a startled woman glances sideways with a hand over her mouth, above the words &ldquo;Who Rendered?&rdquo;">
+</p>
+
 Find out who called render. Adds the file and line that produced a Rails response to the
 `Completed` log line — so an unexplained 403 names its own source.
 
