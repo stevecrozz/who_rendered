@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: ${{ matrix.gemfile }} / ruby ${{ matrix.ruby }}
+    runs-on: ubuntu-latest
+    # rails_main tracks an unreleased moving target. It passes today; it is
+    # allowed to fail so an upstream change is an early warning rather than a
+    # block on unrelated pull requests.
+    continue-on-error: ${{ matrix.gemfile == 'rails_main' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { gemfile: rails_7.1, ruby: "3.1" }
+          - { gemfile: rails_7.1, ruby: "3.3" }
+          - { gemfile: rails_7.2, ruby: "3.1" }
+          - { gemfile: rails_7.2, ruby: "3.3" }
+          - { gemfile: rails_8.0, ruby: "3.2" }
+          - { gemfile: rails_8.0, ruby: "3.4" }
+          - { gemfile: rails_8.1, ruby: "3.2" }
+          - { gemfile: rails_8.1, ruby: "3.4" }
+          - { gemfile: rails_main, ruby: "3.4" }
+    env:
+      BUNDLE_GEMFILE: gemfiles/${{ matrix.gemfile }}.gemfile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - run: bundle exec rake test
